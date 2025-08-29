@@ -19,10 +19,11 @@ type dbConfig struct {
 	Name   string
 	User   string
 	Pass   string
+	useSSL bool
 }
 
 func (db *dbConfig) ConnStr() string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", db.User, db.Pass, db.Host, db.Port, db.Name)
+	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&tls=%v", db.User, db.Pass, db.Host, db.Port, db.Name, db.useSSL)
 }
 
 type config struct {
@@ -44,6 +45,7 @@ func InitConfig() error {
 			Name:   env.Get("DB_NAME", "wilayah-indonesia-api"),
 			User:   env.Get("DB_USER", "root"),
 			Pass:   env.Get("DB_PASS", "password"),
+			useSSL: env.GetAsBool("DB_USE_SSL", false),
 		},
 	}
 
