@@ -42,5 +42,6 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 	helper.ResponseSuccess(w, helper.Response{
 		Status:  http.StatusOK,
 		Message: "Welcome to Wilayah Indonesia API",
+		Result:  struct{}{},
 	})
 }
