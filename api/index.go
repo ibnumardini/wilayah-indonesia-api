@@ -29,7 +29,7 @@ func Handler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	r.Get("/", WelcomeHandler)
+	r.Get("/", welcomeHandler)
 	r.Mount("/provinces", province.LoadModule(dbConn))
 	r.Mount("/regencies", regency.LoadModule(dbConn))
 	r.Mount("/districts", district.LoadModule(dbConn))
@@ -38,7 +38,7 @@ func Handler(w http.ResponseWriter, req *http.Request) {
 	r.ServeHTTP(w, req)
 }
 
-func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
+func welcomeHandler(w http.ResponseWriter, r *http.Request) {
 	helper.ResponseSuccess(w, helper.Response{
 		Status:  http.StatusOK,
 		Message: "Welcome to Wilayah Indonesia API",
