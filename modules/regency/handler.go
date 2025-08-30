@@ -20,7 +20,7 @@ func newHandler(service Service) handler {
 func (h handler) FindByProvinceCode(w http.ResponseWriter, r *http.Request) {
 	provinceCode := chi.URLParam(r, "provinceCode")
 
-	provinces, err := h.service.FindByProvinceCode(provinceCode)
+	regencies, err := h.service.FindByProvinceCode(provinceCode)
 	if err != nil {
 		helper.ResponseError(w, helper.Response{
 			Status:  http.StatusInternalServerError,
@@ -29,7 +29,12 @@ func (h handler) FindByProvinceCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if len(regencies) == 0 {
+		helper.ResponseError(w, helper.Response{Status: http.StatusNotFound})
+		return
+	}
+
 	helper.ResponseSuccess(w, helper.Response{
-		Result: provinces,
+		Result: regencies,
 	})
 }

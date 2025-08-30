@@ -29,6 +29,11 @@ func (h handler) FindByRegencyCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if len(districts) == 0 {
+		helper.ResponseError(w, helper.Response{Status: http.StatusNotFound})
+		return
+	}
+
 	helper.ResponseSuccess(w, helper.Response{
 		Result: districts,
 	})

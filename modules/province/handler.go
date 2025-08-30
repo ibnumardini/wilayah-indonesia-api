@@ -44,6 +44,11 @@ func (h handler) FindByCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if province == (Response{}) {
+		helper.ResponseError(w, helper.Response{Status: http.StatusNotFound})
+		return
+	}
+
 	helper.ResponseSuccess(w, helper.Response{
 		Result: province,
 	})
