@@ -43,7 +43,7 @@ func (r repository) FindByQuery(searchQuery string, pagination helper.Pagination
 				JOIN districts d ON s.district_code = d.code
 				JOIN regencies r ON d.regency_code = r.code
 				JOIN provinces pr ON r.province_code = pr.code
-				WHERE s.name LIKE ? OR p.postcode LIKE ? LIMIT ? OFFSET ?`
+				WHERE LOWER(s.name) LIKE ? OR p.postcode LIKE ? LIMIT ? OFFSET ?`
 
 	if err := r.db.Select(&subdistricts, query, "%"+searchQuery+"%", "%"+searchQuery+"%", pagination.Limit, pagination.Offset); err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func (r repository) CountByQuery(searchQuery string) (int, error) {
 	var count int
 
 	var query = `SELECT COUNT(*) FROM subdistricts as s
-				JOIN postcodes p ON s.code = p.subdistrict_code WHERE s.name LIKE ? OR p.postcode LIKE ?`
+				JOIN postcodes p ON s.code = p.subdistrict_code WHERE LOWER(s.name) LIKE ? OR p.postcode LIKE ?`
 
 	if err := r.db.Get(&count, query, "%"+searchQuery+"%", "%"+searchQuery+"%"); err != nil {
 		return 0, err
