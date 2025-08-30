@@ -12,6 +12,7 @@ import (
 	"github.com/ibnumardini/wilayah-indonesia-api/pkg/config"
 	"github.com/ibnumardini/wilayah-indonesia-api/pkg/db"
 	"github.com/ibnumardini/wilayah-indonesia-api/pkg/helper"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func init() {
@@ -35,6 +36,8 @@ func Handler(w http.ResponseWriter, req *http.Request) {
 	}
 
 	r.Get("/", welcomeHandler)
+	r.Get("/docs/swagger.json", swaggerHandler)
+	r.Get("/swagger/*", httpSwagger.Handler(httpSwagger.URL("/docs/swagger.json")))
 	r.Mount("/provinces", province.LoadModule(dbConn))
 	r.Mount("/regencies", regency.LoadModule(dbConn))
 	r.Mount("/districts", district.LoadModule(dbConn))
@@ -49,4 +52,8 @@ func welcomeHandler(w http.ResponseWriter, r *http.Request) {
 		Message: "Welcome to Wilayah Indonesia API",
 		Result:  struct{}{},
 	})
+}
+
+func swaggerHandler(w http.ResponseWriter, r *http.Request) {
+	httpSwagger.Handler(httpSwagger.URL("/docs/swagger.json"))(w, r)
 }

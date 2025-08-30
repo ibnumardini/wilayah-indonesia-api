@@ -1,0 +1,555 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Wilayah Indonesia API",
+    "version": "1.0.0",
+    "description": "This is a REST API for managing Indonesian administrative regions."
+  },
+  "servers": [
+    {
+      "url": "https://wilayah-indonesia-api.mardini.dev/"
+    },
+    {
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Welcome message",
+        "description": "Returns a welcome message for the API",
+        "tags": ["general"],
+        "responses": {
+          "200": {
+            "description": "Welcome message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/provinces": {
+      "get": {
+        "summary": "Get all provinces",
+        "description": "Retrieve all provinces in Indonesia",
+        "tags": ["provinces"],
+        "responses": {
+          "200": {
+            "description": "List of provinces",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "result": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Province"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/provinces/{code}": {
+      "get": {
+        "summary": "Get province by code",
+        "description": "Retrieve a specific province by its code",
+        "tags": ["provinces"],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The province code",
+            "example": "11"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Province details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "result": {
+                          "$ref": "#/components/schemas/Province"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Province not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/regencies/{provinceCode}": {
+      "get": {
+        "summary": "Get regencies by province code",
+        "description": "Retrieve all regencies within a specific province",
+        "tags": ["regencies"],
+        "parameters": [
+          {
+            "name": "provinceCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The province code",
+            "example": "11"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of regencies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "result": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Regency"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No regencies found for the given province",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/districts/{regencyCode}": {
+      "get": {
+        "summary": "Get districts by regency code",
+        "description": "Retrieve all districts within a specific regency",
+        "tags": ["districts"],
+        "parameters": [
+          {
+            "name": "regencyCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The regency code",
+            "example": "1101"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of districts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "result": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/District"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No districts found for the given regency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subdistricts/{districtCode}": {
+      "get": {
+        "summary": "Get subdistricts by district code",
+        "description": "Retrieve all subdistricts within a specific district",
+        "tags": ["subdistricts"],
+        "parameters": [
+          {
+            "name": "districtCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The district code",
+            "example": "1101010"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of subdistricts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "result": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Subdistrict"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No subdistricts found for the given district",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subdistricts/maps/{searchQuery}": {
+      "get": {
+        "summary": "Search subdistricts by query with pagination",
+        "description": "Search subdistricts by name or other criteria with pagination support",
+        "tags": ["subdistricts"],
+        "parameters": [
+          {
+            "name": "searchQuery",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search query string",
+            "example": "jakarta"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Page number for pagination"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10
+            },
+            "description": "Number of results per page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"],
+              "default": "asc"
+            },
+            "description": "Sort order"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results with pagination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "meta": {
+                          "$ref": "#/components/schemas/PaginationResponse"
+                        },
+                        "result": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/SubdistrictSearch"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No results found for the search query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "OK"
+          },
+          "result": {
+            "type": "object"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "Not Found"
+          },
+          "result": {
+            "type": "object",
+            "example": {}
+          }
+        }
+      },
+      "Province": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "11"
+          },
+          "name": {
+            "type": "string",
+            "example": "ACEH"
+          }
+        }
+      },
+      "Regency": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "1101"
+          },
+          "name": {
+            "type": "string",
+            "example": "KABUPATEN ACEH SELATAN"
+          }
+        }
+      },
+      "District": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "1101010"
+          },
+          "name": {
+            "type": "string",
+            "example": "Bakongan"
+          }
+        }
+      },
+      "Subdistrict": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "1101010001"
+          },
+          "name": {
+            "type": "string",
+            "example": "Keude Bakongan"
+          },
+          "postcode": {
+            "type": "string",
+            "example": "23719"
+          }
+        }
+      },
+      "SubdistrictSearch": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "1101010001"
+          },
+          "name": {
+            "type": "string",
+            "example": "Keude Bakongan"
+          },
+          "district_code": {
+            "type": "string",
+            "example": "1101010"
+          },
+          "district_name": {
+            "type": "string",
+            "example": "Bakongan"
+          },
+          "regency_code": {
+            "type": "string",
+            "example": "1101"
+          },
+          "regency_name": {
+            "type": "string",
+            "example": "KABUPATEN ACEH SELATAN"
+          },
+          "province_code": {
+            "type": "string",
+            "example": "11"
+          },
+          "province_name": {
+            "type": "string",
+            "example": "ACEH"
+          },
+          "postcode": {
+            "type": "string",
+            "example": "23719"
+          },
+          "address": {
+            "type": "string",
+            "example": "Keude Bakongan, Bakongan, KABUPATEN ACEH SELATAN, ACEH"
+          }
+        }
+      },
+      "PaginationResponse": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "example": 100
+          },
+          "per_page": {
+            "type": "integer",
+            "example": 10
+          },
+          "previous_page": {
+            "type": "integer",
+            "example": 1
+          },
+          "page": {
+            "type": "integer",
+            "example": 2
+          },
+          "next_page": {
+            "type": "integer",
+            "example": 3
+          }
+        }
+      }
+    }
+  }
+}
