@@ -2,6 +2,7 @@ package subdistrict
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/ibnumardini/wilayah-indonesia-api/pkg/helper"
 )
@@ -62,12 +63,31 @@ func (s service) FindByQuery(searchQuery string, pagination helper.PaginationReq
 			DistrictCode: subdistrict.DistrictCode,
 			DistrictName: subdistrict.DistrictName,
 			RegencyCode:  subdistrict.RegencyCode,
-			RegencyName:  subdistrict.RegencyName,
+			RegencyName:  fmt.Sprintf("%s %s", getRegencyType(subdistrict.RegencyCode), subdistrict.RegencyName),
 			ProvinceCode: subdistrict.ProvinceCode,
 			ProvinceName: subdistrict.ProvinceName,
-			Address:      fmt.Sprintf("%s, %s, %s, Prov. %s %s", subdistrict.Name, subdistrict.DistrictName, subdistrict.RegencyName, subdistrict.ProvinceName, subdistrict.Postcode),
+			Address:      addressBuilder(subdistrict),
 		})
 	}
 
 	return responses, count, nil
+}
+
+func getRegencyType(regencyCode string) string {
+	typeCode, _ := strconv.Atoi((regencyCode[len(regencyCode)-2:]))
+	if typeCode < 71 {
+		return "Kab."
+	}
+	return "Kota"
+}
+
+func addressBuilder(subdistrict SubdistrictSearch) string {
+	return fmt.Sprintf("%s, Kec. %s, %s %s, Prov. %s %s",
+		subdistrict.Name,
+		subdistrict.DistrictName,
+		getRegencyType(subdistrict.RegencyCode),
+		subdistrict.RegencyName,
+		subdistrict.ProvinceName,
+		subdistrict.Postcode,
+	)
 }
