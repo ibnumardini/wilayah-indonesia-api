@@ -29,10 +29,18 @@ func Handler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	r.Get("/", WelcomeHandler)
 	r.Mount("/provinces", province.LoadModule(dbConn))
 	r.Mount("/regencies", regency.LoadModule(dbConn))
 	r.Mount("/districts", district.LoadModule(dbConn))
 	r.Mount("/subdistricts", subdistrict.LoadModule(dbConn))
 
 	r.ServeHTTP(w, req)
+}
+
+func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
+	helper.ResponseSuccess(w, helper.Response{
+		Status:  http.StatusOK,
+		Message: "Welcome to Wilayah Indonesia API",
+	})
 }
