@@ -9,7 +9,7 @@ type Response struct {
 	Status  int         `json:"-"`
 	Ok      bool        `json:"ok"`
 	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
+	Result  interface{} `json:"result"`
 }
 
 func ResponseSuccess(w http.ResponseWriter, response Response) {
@@ -26,7 +26,7 @@ func ResponseSuccess(w http.ResponseWriter, response Response) {
 	json.NewEncoder(w).Encode(Response{
 		Ok:      true,
 		Message: response.Message,
-		Data:    response.Data,
+		Result:  response.Result,
 	})
 }
 
@@ -44,6 +44,6 @@ func ResponseError(w http.ResponseWriter, response Response) {
 	json.NewEncoder(w).Encode(Response{
 		Ok:      false,
 		Message: response.Message,
-		Data:    struct{}{},
+		Result:  struct{}{},
 	})
 }

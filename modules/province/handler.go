@@ -27,6 +27,6 @@ func (h handler) FindAll(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helper.ResponseSuccess(w, helper.Response{
-		Data: provinces,
+		Result: provinces,
 	})
 }
