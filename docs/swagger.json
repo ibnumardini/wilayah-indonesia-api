@@ -355,7 +355,7 @@
                         "result": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/SubdistrictSearch"
+                            "$ref": "#/components/schemas/SubdistrictMaps"
                           }
                         }
                       }
@@ -497,7 +497,7 @@
           }
         }
       },
-      "SubdistrictSearch": {
+      "SubdistrictMaps": {
         "type": "object",
         "properties": {
           "code": {
