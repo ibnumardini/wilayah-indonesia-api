@@ -26,9 +26,15 @@ func (r repository) FindAll() ([]Province, error) {
 }
 
 func (r repository) FindByCode(code string) (Province, error) {
-	var province Province
-	if err := r.db.Get(&province, "SELECT * FROM provinces WHERE code = ?", code); err != nil {
+	var province []Province
+
+	if err := r.db.Select(&province, "SELECT * FROM provinces WHERE code = ?", code); err != nil {
 		return Province{}, err
 	}
-	return province, nil
+
+	if len(province) == 0 {
+		return Province{}, nil
+	}
+
+	return province[0], nil
 }
