@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/ibnumardini/wilayah-indonesia-api/modules/district"
 	"github.com/ibnumardini/wilayah-indonesia-api/modules/province"
 	"github.com/ibnumardini/wilayah-indonesia-api/modules/regency"
 	"github.com/ibnumardini/wilayah-indonesia-api/pkg/config"
@@ -29,6 +30,7 @@ func Handler(w http.ResponseWriter, req *http.Request) {
 
 	r.Mount("/provinces", province.LoadModule(dbConn))
 	r.Mount("/regencies", regency.LoadModule(dbConn))
+	r.Mount("/districts", district.LoadModule(dbConn))
 
 	r.ServeHTTP(w, req)
 }
