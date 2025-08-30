@@ -1,9 +1,18 @@
 package helper
 
+import "slices"
+
 type PaginationRequest struct {
 	Page   int `schema:"page,default:1"`
 	Limit  int `schema:"limit,default:10"`
 	Offset int
+	Sort   string `schema:"sort,default:asc"`
+}
+
+func (preq *PaginationRequest) CheckSort() {
+	if !slices.Contains([]string{"asc", "desc"}, preq.Sort) {
+		preq.Sort = "asc"
+	}
 }
 
 type PaginationResponse struct {

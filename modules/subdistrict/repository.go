@@ -43,7 +43,7 @@ func (r repository) FindByQuery(searchQuery string, pagination helper.Pagination
 				JOIN districts d ON s.district_code = d.code
 				JOIN regencies r ON d.regency_code = r.code
 				JOIN provinces pr ON r.province_code = pr.code
-				WHERE LOWER(s.name) LIKE ? OR p.postcode LIKE ? LIMIT ? OFFSET ?`
+				WHERE LOWER(s.name) LIKE ? OR p.postcode LIKE ? ORDER BY s.name ` + pagination.Sort + ` LIMIT ? OFFSET ?`
 
 	if err := r.db.Select(&subdistricts, query, "%"+searchQuery+"%", "%"+searchQuery+"%", pagination.Limit, pagination.Offset); err != nil {
 		return nil, err

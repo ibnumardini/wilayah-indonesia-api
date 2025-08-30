@@ -57,6 +57,9 @@ func (h handler) FindByQuery(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// make sure the sort value is valid
+	pagination.CheckSort()
+
 	subdistricts, count, err := h.service.FindByQuery(searchQuery, pagination)
 	if err != nil {
 		helper.ResponseError(w, helper.Response{
