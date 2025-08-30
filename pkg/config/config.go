@@ -8,8 +8,6 @@ import (
 
 type serverConfig struct {
 	AppName string
-	AppHost string
-	AppPort int
 }
 
 type dbConfig struct {
