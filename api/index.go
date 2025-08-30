@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/go-chi/cors"
 	"github.com/ibnumardini/wilayah-indonesia-api/modules/district"
 	"github.com/ibnumardini/wilayah-indonesia-api/modules/province"
 	"github.com/ibnumardini/wilayah-indonesia-api/modules/regency"
@@ -19,6 +20,10 @@ func init() {
 
 func Handler(w http.ResponseWriter, req *http.Request) {
 	r := chi.NewRouter()
+
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins: []string{"https://*", "http://*"},
+	}))
 
 	dbConn, err := db.OpenDbConnection()
 	if err != nil {
