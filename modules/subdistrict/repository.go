@@ -18,8 +18,13 @@ func newRepository(db *sqlx.DB) repository {
 
 func (r repository) FindByDistrictCode(districtCode string) ([]Subdistrict, error) {
 	var subdistricts []Subdistrict
-	if err := r.db.Select(&subdistricts, "SELECT * FROM subdistricts WHERE district_code = ?", districtCode); err != nil {
+
+	var query = `SELECT s.code, s.name, s.district_code, p.postcode FROM subdistricts as s
+				JOIN postcodes p ON s.code = p.subdistrict_code WHERE s.district_code = ?`
+
+	if err := r.db.Select(&subdistricts, query, districtCode); err != nil {
 		return nil, err
 	}
+
 	return subdistricts, nil
 }

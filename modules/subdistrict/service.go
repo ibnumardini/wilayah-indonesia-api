@@ -24,8 +24,9 @@ func (s service) FindByDistrictCode(districtCode string) ([]Response, error) {
 	for _, subdistrict := range subdistricts {
 
 		responses = append(responses, Response{
-			Code: subdistrict.Code,
-			Name: subdistrict.Name,
+			Code:     subdistrict.Code,
+			Name:     subdistrict.Name,
+			Postcode: subdistrict.Postcode,
 		})
 	}
 
