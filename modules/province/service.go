@@ -2,6 +2,7 @@ package province
 
 type Service interface {
 	FindAll() ([]Response, error)
+	FindByCode(code string) (Response, error)
 }
 
 type service struct {
@@ -26,4 +27,13 @@ func (s service) FindAll() ([]Response, error) {
 	}
 
 	return responses, nil
+}
+
+func (s service) FindByCode(code string) (Response, error) {
+	province, err := s.repo.FindByCode(code)
+	if err != nil {
+		return Response{}, err
+	}
+
+	return Response(province), nil
 }

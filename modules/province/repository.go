@@ -4,6 +4,7 @@ import "github.com/jmoiron/sqlx"
 
 type Repository interface {
 	FindAll() ([]Province, error)
+	FindByCode(code string) (Province, error)
 }
 
 type repository struct {
@@ -22,4 +23,12 @@ func (r repository) FindAll() ([]Province, error) {
 		return nil, err
 	}
 	return provinces, nil
+}
+
+func (r repository) FindByCode(code string) (Province, error) {
+	var province Province
+	if err := r.db.Get(&province, "SELECT * FROM provinces WHERE code = $1", code); err != nil {
+		return Province{}, err
+	}
+	return province, nil
 }

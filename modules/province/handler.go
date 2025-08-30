@@ -3,6 +3,7 @@ package province
 import (
 	"net/http"
 
+	"github.com/go-chi/chi"
 	"github.com/ibnumardini/wilayah-indonesia-api/pkg/helper"
 )
 
@@ -28,5 +29,22 @@ func (h handler) FindAll(w http.ResponseWriter, r *http.Request) {
 
 	helper.ResponseSuccess(w, helper.Response{
 		Result: provinces,
+	})
+}
+
+func (h handler) FindByCode(w http.ResponseWriter, r *http.Request) {
+	code := chi.URLParam(r, "code")
+
+	province, err := h.service.FindByCode(code)
+	if err != nil {
+		helper.ResponseError(w, helper.Response{
+			Status:  http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	helper.ResponseSuccess(w, helper.Response{
+		Result: province,
 	})
 }
