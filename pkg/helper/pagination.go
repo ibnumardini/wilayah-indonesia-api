@@ -12,9 +12,9 @@ type PaginationRequest struct {
 	Sort   string `schema:"sort,default:asc"`
 }
 
-func (preq *PaginationRequest) CheckSort() {
-	if !slices.Contains([]string{"asc", "desc"}, preq.Sort) {
-		preq.Sort = "asc"
+func (pr *PaginationRequest) CheckSort() {
+	if !slices.Contains([]string{"asc", "desc"}, pr.Sort) {
+		pr.Sort = "asc"
 	}
 }
 
