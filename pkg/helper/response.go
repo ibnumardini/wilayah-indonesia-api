@@ -6,11 +6,19 @@ import (
 )
 
 type Response struct {
-	Status  int         `json:"-"`
-	Ok      bool        `json:"ok"`
-	Message string      `json:"message"`
-	Meta    interface{} `json:"meta,omitempty"`
-	Result  interface{} `json:"result"`
+	Status  int                    `json:"-"`
+	Ok      bool                   `json:"ok"`
+	Message string                 `json:"message"`
+	Meta    map[string]interface{} `json:"meta"`
+	Result  interface{}            `json:"result"`
+}
+
+func (r *Response) SetWatermark() {
+	if r.Meta == nil {
+		r.Meta = make(map[string]interface{})
+	}
+
+	r.Meta["watermark"] = "https://ibnu.mardini.dev"
 }
 
 func ResponseSuccess(w http.ResponseWriter, response Response) {
@@ -22,18 +30,19 @@ func ResponseSuccess(w http.ResponseWriter, response Response) {
 		response.Message = http.StatusText(response.Status)
 	}
 
-	if response.Meta == nil {
-		response.Meta = nil
-	}
-
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(response.Status)
-	json.NewEncoder(w).Encode(Response{
+
+	var r = Response{
 		Ok:      true,
 		Message: response.Message,
 		Meta:    response.Meta,
 		Result:  response.Result,
-	})
+	}
+
+	r.SetWatermark()
+
+	json.NewEncoder(w).Encode(r)
 }
 
 func ResponseError(w http.ResponseWriter, response Response) {
@@ -47,10 +56,14 @@ func ResponseError(w http.ResponseWriter, response Response) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(response.Status)
-	json.NewEncoder(w).Encode(Response{
+
+	var r = Response{
 		Ok:      false,
 		Message: response.Message,
-		Meta:    nil,
 		Result:  struct{}{},
-	})
+	}
+
+	r.SetWatermark()
+
+	json.NewEncoder(w).Encode(r)
 }
