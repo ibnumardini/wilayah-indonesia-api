@@ -1,6 +1,9 @@
 package helper
 
-import "slices"
+import (
+	"encoding/json"
+	"slices"
+)
 
 type PaginationRequest struct {
 	Page   int `schema:"page,default:1"`
@@ -23,7 +26,7 @@ type PaginationResponse struct {
 	NextPage     int `json:"next_page"`
 }
 
-func (pr PaginationResponse) ToMeta() PaginationResponse {
+func (pr PaginationResponse) ToMeta() map[string]interface{} {
 	var previousPage int
 	if pr.Page > 1 {
 		previousPage = pr.Page - 1
@@ -34,11 +37,23 @@ func (pr PaginationResponse) ToMeta() PaginationResponse {
 		nextPage = pr.Page + 1
 	}
 
-	return PaginationResponse{
+	var pagination = PaginationResponse{
 		Total:        pr.Total,
 		PerPage:      pr.PerPage,
 		PreviousPage: previousPage,
 		Page:         pr.Page,
 		NextPage:     nextPage,
 	}
+
+	var jsonPagination, err = json.Marshal(pagination)
+	if err != nil {
+		panic(err)
+	}
+
+	var meta map[string]interface{}
+	if err := json.Unmarshal(jsonPagination, &meta); err != nil {
+		panic(err)
+	}
+
+	return meta
 }
