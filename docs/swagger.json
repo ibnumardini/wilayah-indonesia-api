@@ -402,10 +402,14 @@
             "type": "string",
             "example": "OK"
           },
+          "meta": {
+            "$ref": "#/components/schemas/MetaResponse"
+          },
           "result": {
             "type": "object"
           }
-        }
+        },
+        "required": ["ok", "message", "meta", "result"]
       },
       "NotFoundErrorResponse": {
         "type": "object",
@@ -418,11 +422,15 @@
             "type": "string",
             "example": "Not Found"
           },
+          "meta": {
+            "$ref": "#/components/schemas/MetaResponse"
+          },
           "result": {
             "type": "object",
             "example": {}
           }
-        }
+        },
+        "required": ["ok", "message", "meta", "result"]
       },
       "BadRequestErrorResponse": {
         "type": "object",
@@ -435,11 +443,15 @@
             "type": "string",
             "example": "Bad Request"
           },
+          "meta": {
+            "$ref": "#/components/schemas/MetaResponse"
+          },
           "result": {
             "type": "object",
             "example": {}
           }
-        }
+        },
+        "required": ["ok", "message", "meta", "result"]
       },
       "Province": {
         "type": "object",
@@ -566,6 +578,16 @@
             "example": 3
           }
         }
+      },
+      "MetaResponse": {
+        "type": "object",
+        "properties": {
+          "watermark": {
+            "type": "string",
+            "example": "https://ibnu.mardini.dev"
+          }
+        },
+        "required": ["watermark"]
       }
     }
   }
