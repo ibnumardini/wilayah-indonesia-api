@@ -23,7 +23,7 @@ func Handler(w http.ResponseWriter, req *http.Request) {
 	r := chi.NewRouter()
 
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins: []string{"https://*", "http://*"},
+		AllowedOrigins: []string{"https://*"},
 	}))
 
 	dbConn, err := db.OpenDbConnection()
