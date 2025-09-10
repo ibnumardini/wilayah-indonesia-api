@@ -1,12 +1,12 @@
 # Wilayah Indonesia API
 
-REST API for Indonesian regional data (Provinces, Regencies/Cities, Districts, and Sub-districts/Villages).
-
 ![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Fibnumardini%2Fbadges&label=repository%20visits&countColor=%230c7ebe&style=flat&labelStyle=none)
 ![License](https://img.shields.io/github/license/ibnumardini/wilayah-indonesia-api)
 ![Go](https://img.shields.io/badge/Go-00ADD8?style=flat&logo=go&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
 ![Vercel](https://vercelbadge.vercel.app/api/ibnumardini/wilayah-indonesia)
+
+REST API for Indonesian regional data (Provinces, Regencies/Cities, Districts, and Sub-districts/Villages).
 
 ## Data Source
 
