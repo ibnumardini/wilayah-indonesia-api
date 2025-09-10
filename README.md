@@ -2,8 +2,6 @@
 
 REST API for Indonesian regional data (Provinces, Regencies/Cities, Districts, and Sub-districts/Villages).
 
-[![StandWithPalestine](https://raw.githubusercontent.com/Safouene1/support-palestine-banner/master/StandWithPalestine.svg)](https://github.com/Safouene1/support-palestine-banner/Markdown-pages/Support.md)
-
 ![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Fibnumardini%2Fbadges&label=repository%20visits&countColor=%230c7ebe&style=flat&labelStyle=none)
 ![License](https://img.shields.io/github/license/ibnumardini/wilayah-indonesia-api)
 ![Go](https://img.shields.io/badge/Go-00ADD8?style=flat&logo=go&logoColor=white)
