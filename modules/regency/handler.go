@@ -32,10 +32,7 @@ func (h handler) FindByProvinceCode(w http.ResponseWriter, r *http.Request) {
 
 	regencies, err := h.service.FindByProvinceCode(r.Context(), provinceCode)
 	if err != nil {
-		httpx.ResponseError(w, httpx.Response{
-			Status:  http.StatusInternalServerError,
-			Message: err.Error(),
-		})
+		httpx.InternalError(w, "regency.find_by_province_code", err)
 		return
 	}
 

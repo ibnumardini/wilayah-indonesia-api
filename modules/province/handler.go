@@ -28,10 +28,7 @@ func newHandler(service Service) handler {
 func (h handler) FindAll(w http.ResponseWriter, r *http.Request) {
 	provinces, err := h.service.FindAll(r.Context())
 	if err != nil {
-		httpx.ResponseError(w, httpx.Response{
-			Status:  http.StatusInternalServerError,
-			Message: err.Error(),
-		})
+		httpx.InternalError(w, "province.find_all", err)
 		return
 	}
 
@@ -58,10 +55,7 @@ func (h handler) FindByCode(w http.ResponseWriter, r *http.Request) {
 
 	province, err := h.service.FindByCode(r.Context(), code)
 	if err != nil {
-		httpx.ResponseError(w, httpx.Response{
-			Status:  http.StatusInternalServerError,
-			Message: err.Error(),
-		})
+		httpx.InternalError(w, "province.find_by_code", err)
 		return
 	}
 

@@ -45,10 +45,7 @@ func (h handler) FindByDistrictCode(w http.ResponseWriter, r *http.Request) {
 
 	subdistricts, err := h.service.FindByDistrictCode(r.Context(), districtCode)
 	if err != nil {
-		httpx.ResponseError(w, httpx.Response{
-			Status:  http.StatusInternalServerError,
-			Message: err.Error(),
-		})
+		httpx.InternalError(w, "subdistrict.find_by_district_code", err)
 		return
 	}
 
@@ -106,10 +103,7 @@ func (h handler) FindByQuery(w http.ResponseWriter, r *http.Request) {
 
 	subdistricts, count, err := h.service.FindByQuery(r.Context(), searchQuery, options)
 	if err != nil {
-		httpx.ResponseError(w, httpx.Response{
-			Status:  http.StatusInternalServerError,
-			Message: err.Error(),
-		})
+		httpx.InternalError(w, "subdistrict.find_by_query", err)
 		return
 	}
 
