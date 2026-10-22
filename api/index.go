@@ -37,6 +37,7 @@ func main() {
 	defer dbConn.Close()
 
 	r := chi.NewRouter()
+	r.Use(httpx.DefaultRateLimiter().Handler)
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins: []string{"https://*"},
 	}))
