@@ -21,6 +21,16 @@ func newHandler(service Service) handler {
 
 var decoder = schema.NewDecoder()
 
+// FindByDistrictCode godoc
+// @Summary Get subdistricts by district code
+// @Description Retrieves all subdistricts within a district.
+// @Tags subdistrict
+// @Produce json
+// @Param districtCode path string true "District code" example(1101010)
+// @Success 200 {object} helper.Response
+// @Failure 404 {object} helper.Response
+// @Failure 500 {object} helper.Response
+// @Router /subdistricts/{districtCode} [get]
 func (h handler) FindByDistrictCode(w http.ResponseWriter, r *http.Request) {
 	districtCode := chi.URLParam(r, "districtCode")
 
@@ -43,6 +53,20 @@ func (h handler) FindByDistrictCode(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// FindByQuery godoc
+// @Summary Search subdistricts
+// @Description Searches subdistricts by name or other criteria with pagination.
+// @Tags subdistrict
+// @Produce json
+// @Param searchQuery path string true "Search query" example(jakarta)
+// @Param page query int false "Page number" default(1)
+// @Param limit query int false "Number of results per page" default(10)
+// @Param sort query string false "Sort order" Enums(asc,desc) default(asc)
+// @Success 200 {object} helper.Response
+// @Failure 400 {object} helper.Response
+// @Failure 404 {object} helper.Response
+// @Failure 500 {object} helper.Response
+// @Router /subdistricts/maps/{searchQuery} [get]
 func (h handler) FindByQuery(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		helper.ResponseError(w, helper.Response{Status: http.StatusBadRequest})

@@ -17,6 +17,16 @@ func newHandler(service Service) handler {
 	}
 }
 
+// FindByProvinceCode godoc
+// @Summary Get regencies by province code
+// @Description Retrieves all regencies within a province.
+// @Tags regencies
+// @Produce json
+// @Param provinceCode path string true "Province code" example(11)
+// @Success 200 {object} helper.Response
+// @Failure 404 {object} helper.Response
+// @Failure 500 {object} helper.Response
+// @Router /regencies/{provinceCode} [get]
 func (h handler) FindByProvinceCode(w http.ResponseWriter, r *http.Request) {
 	provinceCode := chi.URLParam(r, "provinceCode")
 

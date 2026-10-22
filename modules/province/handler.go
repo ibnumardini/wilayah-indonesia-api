@@ -17,6 +17,14 @@ func newHandler(service Service) handler {
 	}
 }
 
+// FindAll godoc
+// @Summary Get all provinces
+// @Description Retrieves all provinces in Indonesia.
+// @Tags province
+// @Produce json
+// @Success 200 {object} helper.Response
+// @Failure 500 {object} helper.Response
+// @Router /provinces [get]
 func (h handler) FindAll(w http.ResponseWriter, r *http.Request) {
 	provinces, err := h.service.FindAll()
 	if err != nil {
@@ -32,6 +40,16 @@ func (h handler) FindAll(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// FindByCode godoc
+// @Summary Get province by code
+// @Description Retrieves a province by its code.
+// @Tags province
+// @Produce json
+// @Param code path string true "Province code" example(11)
+// @Success 200 {object} helper.Response
+// @Failure 404 {object} helper.Response
+// @Failure 500 {object} helper.Response
+// @Router /provinces/{code} [get]
 func (h handler) FindByCode(w http.ResponseWriter, r *http.Request) {
 	code := chi.URLParam(r, "code")
 

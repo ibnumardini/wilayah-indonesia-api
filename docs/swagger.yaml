@@ -1,0 +1,215 @@
+basePath: /
+definitions:
+  helper.Response:
+    properties:
+      message:
+        type: string
+      meta:
+        additionalProperties: true
+        type: object
+      ok:
+        type: boolean
+      result: {}
+    type: object
+info:
+  contact: {}
+  description: REST API for Indonesian administrative regions.
+  title: Wilayah Indonesia API
+  version: "1.0"
+paths:
+  /:
+    get:
+      description: Returns a welcome message for the API.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.Response'
+      summary: Welcome message
+      tags:
+      - welcome
+  /districts/{regencyCode}:
+    get:
+      description: Retrieves all districts within a regency.
+      parameters:
+      - description: Regency code
+        example: "1101"
+        in: path
+        name: regencyCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/helper.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/helper.Response'
+      summary: Get districts by regency code
+      tags:
+      - district
+  /provinces:
+    get:
+      description: Retrieves all provinces in Indonesia.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/helper.Response'
+      summary: Get all provinces
+      tags:
+      - province
+  /provinces/{code}:
+    get:
+      description: Retrieves a province by its code.
+      parameters:
+      - description: Province code
+        example: "11"
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/helper.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/helper.Response'
+      summary: Get province by code
+      tags:
+      - province
+  /regencies/{provinceCode}:
+    get:
+      description: Retrieves all regencies within a province.
+      parameters:
+      - description: Province code
+        example: "11"
+        in: path
+        name: provinceCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/helper.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/helper.Response'
+      summary: Get regencies by province code
+      tags:
+      - regencies
+  /subdistricts/{districtCode}:
+    get:
+      description: Retrieves all subdistricts within a district.
+      parameters:
+      - description: District code
+        example: "1101010"
+        in: path
+        name: districtCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/helper.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/helper.Response'
+      summary: Get subdistricts by district code
+      tags:
+      - subdistrict
+  /subdistricts/maps/{searchQuery}:
+    get:
+      description: Searches subdistricts by name or other criteria with pagination.
+      parameters:
+      - description: Search query
+        example: jakarta
+        in: path
+        name: searchQuery
+        required: true
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Number of results per page
+        in: query
+        name: limit
+        type: integer
+      - default: asc
+        description: Sort order
+        enum:
+        - asc
+        - desc
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helper.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/helper.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/helper.Response'
+      summary: Search subdistricts
+      tags:
+      - subdistrict
+schemes:
+- http
+- https
+swagger: "2.0"

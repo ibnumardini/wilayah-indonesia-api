@@ -17,6 +17,16 @@ func newHandler(service Service) handler {
 	}
 }
 
+// FindByRegencyCode godoc
+// @Summary Get districts by regency code
+// @Description Retrieves all districts within a regency.
+// @Tags district
+// @Produce json
+// @Param regencyCode path string true "Regency code" example(1101)
+// @Success 200 {object} helper.Response
+// @Failure 404 {object} helper.Response
+// @Failure 500 {object} helper.Response
+// @Router /districts/{regencyCode} [get]
 func (h handler) FindByRegencyCode(w http.ResponseWriter, r *http.Request) {
 	regencyCode := chi.URLParam(r, "regencyCode")
 

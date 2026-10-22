@@ -31,6 +31,11 @@ tasks:
     cmds:
       - gofmt -w ./api ./modules ./pkg
 
+  swagger:
+    desc: Generate Swagger documentation from Go annotations
+    cmds:
+      - go run github.com/swaggo/swag/cmd/swag@v1.16.6 init -g index.go -d ./api,./modules/province,./modules/regency,./modules/district,./modules/subdistrict,./pkg/helper,./pkg/config,./pkg/db,./pkg/env -o ./docs --outputTypes go,json,yaml --parseDependency --parseInternal
+
   docker:up:
     desc: Build and run the development container
     cmds:

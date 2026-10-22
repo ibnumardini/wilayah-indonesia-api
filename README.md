@@ -73,7 +73,15 @@ The project includes [Task](https://taskfile.dev/) commands and [Air](https://gi
 task dev
 ```
 
-The API listens on `http://localhost:8080` by default. Configure the existing database connection with environment variables such as `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`, and `DB_USE_SSL`.
+The API listens on `http://localhost:8080` by default. Configure the existing database connection with environment variables such as `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`, and `DB_USE_SSL`. Swagger uses the current API origin by default; set `SWAGGER_HOST` only when the public API host must be overridden.
+
+Generate the Swagger UI assets and specification from the Go annotations with:
+
+```bash
+task swagger
+```
+
+This generates `docs/docs.go`, `docs/swagger.json`, and `docs/swagger.yaml`. The Swagger UI is available at `/swagger/index.html`.
 
 ## Docker
 
