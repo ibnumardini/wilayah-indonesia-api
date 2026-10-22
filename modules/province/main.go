@@ -6,7 +6,7 @@ import (
 )
 
 func LoadModule(dbConn *sqlx.DB) *chi.Mux {
-	repo := newRepository(dbConn)
+	repo := newMySQLRepository(dbConn)
 	service := newService(&repo)
 	handler := newHandler(&service)
 
