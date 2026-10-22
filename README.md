@@ -1,108 +1,100 @@
 # Wilayah Indonesia API
 
-![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Fibnumardini%2Fbadges&label=repository%20visits&countColor=%230c7ebe&style=flat&labelStyle=none)
+REST API for Indonesian administrative regions: provinces, regencies/cities,
+districts, and villages. Built with Go and MySQL, with interactive
+documentation via Swagger.
+
 ![License](https://img.shields.io/github/license/ibnumardini/wilayah-indonesia-api)
-![Go](https://img.shields.io/badge/Go-00ADD8?style=flat&logo=go&logoColor=white)
+![Go](https://img.shields.io/badge/Go-1.27.3-00ADD8?style=flat&logo=go&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
-
-REST API for Indonesian regional data (Provinces, Regencies/Cities, Districts, and Sub-districts/Villages).
-
-## Data Source
-
-This API uses data fetched from BPS (Statistics Indonesia) using [@ibnumardini/wilayah-indonesia](https://www.npmjs.com/package/@ibnumardini/wilayah-indonesia) CLI package.
 
 ## Features
 
-- Province data
-- Regency/City data
-- District data
-- Sub-district/Village data
-- Swagger Documentation
+- REST API for Indonesian administrative region data
+- Interactive API documentation with Swagger UI
+- Hot reload for local development with Air
+- Docker-based development workflow
 
-## Tech Stack
+## Data Source
 
-- Go 1.27.3
-- Chi Router
-- MySQL Database
-- Swagger/OpenAPI
+Regional data is sourced from BPS (Statistics Indonesia) through the
+[@ibnumardini/wilayah-indonesia](https://www.npmjs.com/package/@ibnumardini/wilayah-indonesia)
+CLI package.
 
-## API Endpoints
+## Prerequisites
 
-### Base URL
+| Tool | Notes |
+| --- | --- |
+| Go 1.27.3+ | Required |
+| MySQL | Required |
+| [Task](https://taskfile.dev/) | Required for project commands |
+| Docker and Docker Compose | Optional |
 
-```sh
-https://wilayah-indonesia-api.mardini.dev
-```
+> **Note:** The database must already exist before starting the API. This
+> project does not create, migrate, or seed a database.
 
-### Endpoints
+## Getting Started
 
-- `GET /` - Welcome message
-- `GET /provinces` - List of provinces
-- `GET /regencies` - List of regencies/cities
-- `GET /districts` - List of districts
-- `GET /subdistricts` - List of sub-districts/villages
-- `GET /swagger/index.html` - API Documentation
-
-## Development
-
-### Prerequisites
-
-- Go 1.27.3 or higher
-- MySQL Database
-
-### Installation
-
-1. Clone repository
-
-    ```bash
-    git clone https://github.com/ibnumardini/wilayah-indonesia-api.git
-    cd wilayah-indonesia-api
-    ```
-
-2. Install dependencies
+1. Clone the repository
 
    ```bash
-   go mod tidy
+   git clone https://github.com/ibnumardini/wilayah-indonesia-api.git
+   cd wilayah-indonesia-api
    ```
 
-## Local development
+2. Download dependencies
 
-The project includes [Task](https://taskfile.dev/) commands and [Air](https://github.com/air-verse/air) configuration for hot reload. The `dev` task runs Air through `go run`, so Air does not need to be installed globally:
+   ```bash
+   go mod download
+   ```
 
-```bash
-task dev
-```
+3. Configure the environment
 
-The API listens on `http://localhost:8080` by default. Configure the existing database connection with environment variables such as `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`, and `DB_USE_SSL`. Swagger uses the current API origin by default; set `SWAGGER_HOST` only when the public API host must be overridden.
+   ```bash
+   cp .env.example .env
+   ```
 
-Generate the Swagger UI assets and specification from the Go annotations with:
+   Update the database values in `.env` to match your environment. The
+   `SWAGGER_HOST` variable is optional. Leave it empty to use the current API
+   origin, or set it to a public host without a scheme:
+
+   ```dotenv
+   SWAGGER_HOST=api.example.com
+   ```
+
+   See [.env.example](./.env.example) for the complete list of variables.
+
+4. Run the API
+
+   With Air hot reload:
+
+   ```bash
+   task dev
+   ```
+
+   Without hot reload:
+
+   ```bash
+   task run
+   ```
+
+   The API is available at `http://localhost:8080`.
+
+## API Documentation
+
+Swagger UI is available at
+[`http://localhost:8080/swagger/index.html`](http://localhost:8080/swagger/index.html)
+when the API is running.
+
+Regenerate the Swagger artifacts after changing endpoint annotations:
 
 ```bash
 task swagger
 ```
 
-This generates `docs/docs.go`, `docs/swagger.json`, and `docs/swagger.yaml`. The Swagger UI is available at `/swagger/index.html`.
+This updates [docs/docs.go](./docs/docs.go), [docs/swagger.json](./docs/swagger.json),
+and [docs/swagger.yaml](./docs/swagger.yaml).
 
-## Docker
+## License
 
-Docker Compose runs only the API; it does not create or initialize a database. By default, the container connects to a database on the host through `host.docker.internal:3306`. Compose loads all container environment variables from `.env` using `env_file`.
-
-Copy the template to `.env` and adjust the database values before starting:
-
-```bash
-cp .env.example .env
-
-task docker:up
-```
-
-The included `.env` uses the same defaults and is ignored by Git, so replace its database credentials for your environment.
-
-Source changes are mounted into the development container and automatically rebuilt by Air. To build the production image without running it:
-
-```bash
-task docker:build
-```
-
-## Documentation
-
-API documentation is available at `/swagger/index.html` endpoint.
+This project is licensed under the terms of the [LICENSE](./LICENSE) file.
