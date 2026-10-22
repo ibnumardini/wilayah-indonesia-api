@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 
-	"github.com/ibnumardini/wilayah-indonesia-api/pkg/env"
+	"github.com/ibnumardini/wilayah-indonesia-api/internal/env"
 )
 
 type serverConfig struct {

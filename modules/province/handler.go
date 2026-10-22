@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	"github.com/ibnumardini/wilayah-indonesia-api/pkg/helper"
+	"github.com/ibnumardini/wilayah-indonesia-api/internal/httpx"
 )
 
 type handler struct {
@@ -22,13 +22,13 @@ func newHandler(service Service) handler {
 // @Description Retrieves all provinces in Indonesia.
 // @Tags province
 // @Produce json
-// @Success 200 {object} helper.Response
-// @Failure 500 {object} helper.Response
+// @Success 200 {object} httpx.Response
+// @Failure 500 {object} httpx.Response
 // @Router /provinces [get]
 func (h handler) FindAll(w http.ResponseWriter, r *http.Request) {
 	provinces, err := h.service.FindAll(r.Context())
 	if err != nil {
-		helper.ResponseError(w, helper.Response{
+		httpx.ResponseError(w, httpx.Response{
 			Status:  http.StatusInternalServerError,
 			Message: err.Error(),
 		})
@@ -40,7 +40,7 @@ func (h handler) FindAll(w http.ResponseWriter, r *http.Request) {
 		responses = append(responses, Response(province))
 	}
 
-	helper.ResponseSuccess(w, helper.Response{Result: responses})
+	httpx.ResponseSuccess(w, httpx.Response{Result: responses})
 }
 
 // FindByCode godoc
@@ -49,16 +49,16 @@ func (h handler) FindAll(w http.ResponseWriter, r *http.Request) {
 // @Tags province
 // @Produce json
 // @Param code path string true "Province code" example(11)
-// @Success 200 {object} helper.Response
-// @Failure 404 {object} helper.Response
-// @Failure 500 {object} helper.Response
+// @Success 200 {object} httpx.Response
+// @Failure 404 {object} httpx.Response
+// @Failure 500 {object} httpx.Response
 // @Router /provinces/{code} [get]
 func (h handler) FindByCode(w http.ResponseWriter, r *http.Request) {
 	code := chi.URLParam(r, "code")
 
 	province, err := h.service.FindByCode(r.Context(), code)
 	if err != nil {
-		helper.ResponseError(w, helper.Response{
+		httpx.ResponseError(w, httpx.Response{
 			Status:  http.StatusInternalServerError,
 			Message: err.Error(),
 		})
@@ -66,9 +66,9 @@ func (h handler) FindByCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if province == nil {
-		helper.ResponseError(w, helper.Response{Status: http.StatusNotFound})
+		httpx.ResponseError(w, httpx.Response{Status: http.StatusNotFound})
 		return
 	}
 
-	helper.ResponseSuccess(w, helper.Response{Result: Response(*province)})
+	httpx.ResponseSuccess(w, httpx.Response{Result: Response(*province)})
 }

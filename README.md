@@ -121,7 +121,7 @@ HTTP handler -> service -> repository interface
 Services and repositories receive `context.Context` from the request. HTTP
 response DTOs and query parsing stay in the handler layer, while database
 implementations remain details of the module. Shared infrastructure and
-helpers are kept under [`pkg/`](./pkg/).
+helpers and application infrastructure are kept under [`internal/`](./internal/).
 
 ## License
 

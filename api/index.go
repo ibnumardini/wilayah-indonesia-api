@@ -13,13 +13,13 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"github.com/ibnumardini/wilayah-indonesia-api/docs"
+	"github.com/ibnumardini/wilayah-indonesia-api/internal/config"
+	"github.com/ibnumardini/wilayah-indonesia-api/internal/database"
+	"github.com/ibnumardini/wilayah-indonesia-api/internal/httpx"
 	"github.com/ibnumardini/wilayah-indonesia-api/modules/district"
 	"github.com/ibnumardini/wilayah-indonesia-api/modules/province"
 	"github.com/ibnumardini/wilayah-indonesia-api/modules/regency"
 	"github.com/ibnumardini/wilayah-indonesia-api/modules/subdistrict"
-	"github.com/ibnumardini/wilayah-indonesia-api/pkg/config"
-	"github.com/ibnumardini/wilayah-indonesia-api/pkg/db"
-	"github.com/ibnumardini/wilayah-indonesia-api/pkg/helper"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
@@ -30,7 +30,7 @@ func main() {
 
 	docs.SwaggerInfo.Host = config.C.Server.SwaggerHost
 
-	dbConn, err := db.OpenDbConnection()
+	dbConn, err := database.OpenDbConnection()
 	if err != nil {
 		log.Fatalf("connect to database: %v", err)
 	}
@@ -66,10 +66,10 @@ func main() {
 // @Description Returns a welcome message for the API.
 // @Tags welcome
 // @Produce json
-// @Success 200 {object} helper.Response
+// @Success 200 {object} httpx.Response
 // @Router / [get]
 func welcomeHandler(w http.ResponseWriter, r *http.Request) {
-	helper.ResponseSuccess(w, helper.Response{
+	httpx.ResponseSuccess(w, httpx.Response{
 		Status:  http.StatusOK,
 		Message: "Welcome to Wilayah Indonesia API",
 		Result:  struct{}{},

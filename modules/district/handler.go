@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	"github.com/ibnumardini/wilayah-indonesia-api/pkg/helper"
+	"github.com/ibnumardini/wilayah-indonesia-api/internal/httpx"
 )
 
 type handler struct {
@@ -23,16 +23,16 @@ func newHandler(service Service) handler {
 // @Tags district
 // @Produce json
 // @Param regencyCode path string true "Regency code" example(1101)
-// @Success 200 {object} helper.Response
-// @Failure 404 {object} helper.Response
-// @Failure 500 {object} helper.Response
+// @Success 200 {object} httpx.Response
+// @Failure 404 {object} httpx.Response
+// @Failure 500 {object} httpx.Response
 // @Router /districts/{regencyCode} [get]
 func (h handler) FindByRegencyCode(w http.ResponseWriter, r *http.Request) {
 	regencyCode := chi.URLParam(r, "regencyCode")
 
 	districts, err := h.service.FindByRegencyCode(r.Context(), regencyCode)
 	if err != nil {
-		helper.ResponseError(w, helper.Response{
+		httpx.ResponseError(w, httpx.Response{
 			Status:  http.StatusInternalServerError,
 			Message: err.Error(),
 		})
@@ -40,7 +40,7 @@ func (h handler) FindByRegencyCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(districts) == 0 {
-		helper.ResponseError(w, helper.Response{Status: http.StatusNotFound})
+		httpx.ResponseError(w, httpx.Response{Status: http.StatusNotFound})
 		return
 	}
 
@@ -52,5 +52,5 @@ func (h handler) FindByRegencyCode(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	helper.ResponseSuccess(w, helper.Response{Result: responses})
+	httpx.ResponseSuccess(w, httpx.Response{Result: responses})
 }

@@ -1,8 +1,8 @@
-package db
+package database
 
 import (
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/ibnumardini/wilayah-indonesia-api/pkg/config"
+	"github.com/ibnumardini/wilayah-indonesia-api/internal/config"
 	"github.com/jmoiron/sqlx"
 )
 

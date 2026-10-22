@@ -8,8 +8,8 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/gorilla/schema"
-	"github.com/ibnumardini/wilayah-indonesia-api/pkg/helper"
-	"github.com/ibnumardini/wilayah-indonesia-api/pkg/pagination"
+	"github.com/ibnumardini/wilayah-indonesia-api/internal/httpx"
+	"github.com/ibnumardini/wilayah-indonesia-api/internal/pagination"
 )
 
 type handler struct {
@@ -36,16 +36,16 @@ type paginationQuery struct {
 // @Tags subdistrict
 // @Produce json
 // @Param districtCode path string true "District code" example(1101010)
-// @Success 200 {object} helper.Response
-// @Failure 404 {object} helper.Response
-// @Failure 500 {object} helper.Response
+// @Success 200 {object} httpx.Response
+// @Failure 404 {object} httpx.Response
+// @Failure 500 {object} httpx.Response
 // @Router /subdistricts/{districtCode} [get]
 func (h handler) FindByDistrictCode(w http.ResponseWriter, r *http.Request) {
 	districtCode := chi.URLParam(r, "districtCode")
 
 	subdistricts, err := h.service.FindByDistrictCode(r.Context(), districtCode)
 	if err != nil {
-		helper.ResponseError(w, helper.Response{
+		httpx.ResponseError(w, httpx.Response{
 			Status:  http.StatusInternalServerError,
 			Message: err.Error(),
 		})
@@ -53,7 +53,7 @@ func (h handler) FindByDistrictCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(subdistricts) == 0 {
-		helper.ResponseError(w, helper.Response{Status: http.StatusNotFound})
+		httpx.ResponseError(w, httpx.Response{Status: http.StatusNotFound})
 		return
 	}
 
@@ -66,7 +66,7 @@ func (h handler) FindByDistrictCode(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	helper.ResponseSuccess(w, helper.Response{Result: responses})
+	httpx.ResponseSuccess(w, httpx.Response{Result: responses})
 }
 
 // FindByQuery godoc
@@ -78,14 +78,14 @@ func (h handler) FindByDistrictCode(w http.ResponseWriter, r *http.Request) {
 // @Param page query int false "Page number" default(1)
 // @Param limit query int false "Number of results per page" default(10)
 // @Param sort query string false "Sort order" Enums(asc,desc) default(asc)
-// @Success 200 {object} helper.Response
-// @Failure 400 {object} helper.Response
-// @Failure 404 {object} helper.Response
-// @Failure 500 {object} helper.Response
+// @Success 200 {object} httpx.Response
+// @Failure 400 {object} httpx.Response
+// @Failure 404 {object} httpx.Response
+// @Failure 500 {object} httpx.Response
 // @Router /subdistricts/maps/{searchQuery} [get]
 func (h handler) FindByQuery(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
-		helper.ResponseError(w, helper.Response{Status: http.StatusBadRequest})
+		httpx.ResponseError(w, httpx.Response{Status: http.StatusBadRequest})
 		return
 	}
 
@@ -93,7 +93,7 @@ func (h handler) FindByQuery(w http.ResponseWriter, r *http.Request) {
 
 	var paginationParams paginationQuery
 	if err := decoder.Decode(&paginationParams, r.URL.Query()); err != nil {
-		helper.ResponseError(w, helper.Response{Status: http.StatusBadRequest})
+		httpx.ResponseError(w, httpx.Response{Status: http.StatusBadRequest})
 		return
 	}
 
@@ -106,7 +106,7 @@ func (h handler) FindByQuery(w http.ResponseWriter, r *http.Request) {
 
 	subdistricts, count, err := h.service.FindByQuery(r.Context(), searchQuery, options)
 	if err != nil {
-		helper.ResponseError(w, helper.Response{
+		httpx.ResponseError(w, httpx.Response{
 			Status:  http.StatusInternalServerError,
 			Message: err.Error(),
 		})
@@ -114,7 +114,7 @@ func (h handler) FindByQuery(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(subdistricts) == 0 {
-		helper.ResponseError(w, helper.Response{Status: http.StatusNotFound})
+		httpx.ResponseError(w, httpx.Response{Status: http.StatusNotFound})
 		return
 	}
 
@@ -129,7 +129,7 @@ func (h handler) FindByQuery(w http.ResponseWriter, r *http.Request) {
 		responses = append(responses, toResponseSearch(subdistrict))
 	}
 
-	helper.ResponseSuccess(w, helper.Response{
+	httpx.ResponseSuccess(w, httpx.Response{
 		Meta:   paginationMetadata.ToMap(),
 		Result: responses,
 	})

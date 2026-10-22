@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	"github.com/ibnumardini/wilayah-indonesia-api/pkg/helper"
+	"github.com/ibnumardini/wilayah-indonesia-api/internal/httpx"
 )
 
 type handler struct {
@@ -23,16 +23,16 @@ func newHandler(service Service) handler {
 // @Tags regencies
 // @Produce json
 // @Param provinceCode path string true "Province code" example(11)
-// @Success 200 {object} helper.Response
-// @Failure 404 {object} helper.Response
-// @Failure 500 {object} helper.Response
+// @Success 200 {object} httpx.Response
+// @Failure 404 {object} httpx.Response
+// @Failure 500 {object} httpx.Response
 // @Router /regencies/{provinceCode} [get]
 func (h handler) FindByProvinceCode(w http.ResponseWriter, r *http.Request) {
 	provinceCode := chi.URLParam(r, "provinceCode")
 
 	regencies, err := h.service.FindByProvinceCode(r.Context(), provinceCode)
 	if err != nil {
-		helper.ResponseError(w, helper.Response{
+		httpx.ResponseError(w, httpx.Response{
 			Status:  http.StatusInternalServerError,
 			Message: err.Error(),
 		})
@@ -40,7 +40,7 @@ func (h handler) FindByProvinceCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(regencies) == 0 {
-		helper.ResponseError(w, helper.Response{Status: http.StatusNotFound})
+		httpx.ResponseError(w, httpx.Response{Status: http.StatusNotFound})
 		return
 	}
 
@@ -52,5 +52,5 @@ func (h handler) FindByProvinceCode(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	helper.ResponseSuccess(w, helper.Response{Result: responses})
+	httpx.ResponseSuccess(w, httpx.Response{Result: responses})
 }

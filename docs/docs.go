@@ -29,7 +29,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     }
                 }
@@ -59,19 +59,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     }
                 }
@@ -91,13 +91,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     }
                 }
@@ -127,19 +127,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     }
                 }
@@ -169,19 +169,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     }
                 }
@@ -236,25 +236,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     }
                 }
@@ -284,19 +284,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/helper.Response"
+                            "$ref": "#/definitions/httpx.Response"
                         }
                     }
                 }
@@ -304,7 +304,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "helper.Response": {
+        "httpx.Response": {
             "type": "object",
             "properties": {
                 "message": {

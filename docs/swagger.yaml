@@ -1,6 +1,6 @@
 basePath: /
 definitions:
-  helper.Response:
+  httpx.Response:
     properties:
       message:
         type: string
@@ -26,7 +26,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
       summary: Welcome message
       tags:
       - welcome
@@ -46,15 +46,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
       summary: Get districts by regency code
       tags:
       - district
@@ -67,11 +67,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
       summary: Get all provinces
       tags:
       - province
@@ -91,15 +91,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
       summary: Get province by code
       tags:
       - province
@@ -119,15 +119,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
       summary: Get regencies by province code
       tags:
       - regencies
@@ -147,15 +147,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
       summary: Get subdistricts by district code
       tags:
       - subdistrict
@@ -193,19 +193,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/helper.Response'
+            $ref: '#/definitions/httpx.Response'
       summary: Search subdistricts
       tags:
       - subdistrict

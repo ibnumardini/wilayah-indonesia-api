@@ -29,12 +29,12 @@ tasks:
   fmt:
     desc: Format Go source files
     cmds:
-      - gofmt -w ./api ./modules ./pkg
+      - gofmt -w ./api ./internal ./modules
 
   swagger:
     desc: Generate Swagger documentation from Go annotations
     cmds:
-      - go run github.com/swaggo/swag/cmd/swag@v1.16.6 init -g index.go -d ./api,./modules/province,./modules/regency,./modules/district,./modules/subdistrict,./pkg/helper,./pkg/config,./pkg/db,./pkg/env -o ./docs --outputTypes go,json,yaml --parseDependency --parseInternal
+      - go run github.com/swaggo/swag/cmd/swag@v1.16.6 init -g index.go -d ./api,./modules/province,./modules/regency,./modules/district,./modules/subdistrict,./internal/httpx,./internal/config,./internal/database,./internal/env -o ./docs --outputTypes go,json,yaml --parseDependency --parseInternal
 
   docker:up:
     desc: Build and run the development container
