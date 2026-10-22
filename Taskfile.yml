@@ -1,0 +1,47 @@
+version: "3"
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list
+
+  dev:
+    desc: Run the API locally with Air hot reload
+    cmds:
+      - go run github.com/air-verse/air@v1.61.7 -c .air.toml
+
+  build:
+    desc: Build the API binary
+    cmds:
+      - go build -o ./tmp/wilayah-indonesia-api ./api
+
+  run:
+    desc: Run the API locally
+    cmds:
+      - go run ./api
+
+  test:
+    desc: Run Go tests
+    cmds:
+      - go test ./...
+
+  fmt:
+    desc: Format Go source files
+    cmds:
+      - gofmt -w ./api ./modules ./pkg
+
+  docker:up:
+    desc: Build and run the development container
+    cmds:
+      - docker compose up --build
+
+  docker:down:
+    desc: Stop the development container
+    cmds:
+      - docker compose down
+
+  docker:build:
+    desc: Build the production image
+    cmds:
+      - docker build --target production -t wilayah-indonesia-api:latest .
