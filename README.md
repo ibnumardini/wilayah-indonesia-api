@@ -4,7 +4,6 @@
 ![License](https://img.shields.io/github/license/ibnumardini/wilayah-indonesia-api)
 ![Go](https://img.shields.io/badge/Go-00ADD8?style=flat&logo=go&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
-![Vercel](https://vercelbadge.vercel.app/api/ibnumardini/wilayah-indonesia)
 
 REST API for Indonesian regional data (Provinces, Regencies/Cities, Districts, and Sub-districts/Villages).
 
@@ -46,12 +45,9 @@ https://wilayah-indonesia-api.mardini.dev
 
 ## Development
 
-Development [using vercel/cli](https://vercel.com/docs/cli), so the first step is install it & deploy the project to [https://vercel.com](https://vercel.com)
-
 ### Prerequisites
 
 - Go 1.23.1 or higher
-- Vercel CLI
 - MySQL Database
 
 ### Installation
@@ -68,20 +64,6 @@ Development [using vercel/cli](https://vercel.com/docs/cli), so the first step i
    ```bash
    go mod tidy
    ```
-
-3. Set up environment variables (in [vercel dashboard](https://vercel.com))
-
-4. Run the application
-
-   ```bash
-   vercel dev
-   ```
-
-## Deployment
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fibnumardini%2Fwilayah-indonesia-api%2Ftree%2Fmaster)
-
-This API is deployed on [Vercel](https://vercel.com). Check `vercel.json` for deployment configuration.
 
 ## Documentation
 
