@@ -100,6 +100,13 @@ func (h handler) FindByQuery(w http.ResponseWriter, r *http.Request) {
 		Sort:  paginationParams.Sort,
 	}
 	options.CheckSort()
+	if err := options.Validate(); err != nil {
+		httpx.ResponseError(w, httpx.Response{
+			Status:  http.StatusBadRequest,
+			Message: err.Error(),
+		})
+		return
+	}
 
 	subdistricts, count, err := h.service.FindByQuery(r.Context(), searchQuery, options)
 	if err != nil {

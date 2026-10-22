@@ -3,6 +3,7 @@ module github.com/ibnumardini/wilayah-indonesia-api
 go 1.27.3
 
 require (
+	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 	github.com/go-chi/chi v1.5.5
 	github.com/go-chi/cors v1.2.2
 	github.com/go-sql-driver/mysql v1.9.3
