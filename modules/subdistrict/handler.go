@@ -1,7 +1,9 @@
 package subdistrict
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/go-chi/chi"
@@ -21,6 +23,12 @@ func newHandler(service Service) handler {
 
 var decoder = schema.NewDecoder()
 
+type paginationQuery struct {
+	Page  int    `schema:"page,default:1"`
+	Limit int    `schema:"limit,default:10"`
+	Sort  string `schema:"sort,default:asc"`
+}
+
 // FindByDistrictCode godoc
 // @Summary Get subdistricts by district code
 // @Description Retrieves all subdistricts within a district.
@@ -34,7 +42,7 @@ var decoder = schema.NewDecoder()
 func (h handler) FindByDistrictCode(w http.ResponseWriter, r *http.Request) {
 	districtCode := chi.URLParam(r, "districtCode")
 
-	subdistricts, err := h.service.FindByDistrictCode(districtCode)
+	subdistricts, err := h.service.FindByDistrictCode(r.Context(), districtCode)
 	if err != nil {
 		helper.ResponseError(w, helper.Response{
 			Status:  http.StatusInternalServerError,
@@ -48,9 +56,16 @@ func (h handler) FindByDistrictCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.ResponseSuccess(w, helper.Response{
-		Result: subdistricts,
-	})
+	responses := make([]Response, 0, len(subdistricts))
+	for _, subdistrict := range subdistricts {
+		responses = append(responses, Response{
+			Code:     subdistrict.Code,
+			Name:     subdistrict.Name,
+			Postcode: subdistrict.Postcode,
+		})
+	}
+
+	helper.ResponseSuccess(w, helper.Response{Result: responses})
 }
 
 // FindByQuery godoc
@@ -75,15 +90,20 @@ func (h handler) FindByQuery(w http.ResponseWriter, r *http.Request) {
 
 	var searchQuery string = strings.ToLower(chi.URLParam(r, "searchQuery"))
 
-	var pagination helper.PaginationRequest
+	var pagination paginationQuery
 	if err := decoder.Decode(&pagination, r.URL.Query()); err != nil {
 		helper.ResponseError(w, helper.Response{Status: http.StatusBadRequest})
 		return
 	}
 
-	pagination.CheckSort()
+	options := QueryOptions{
+		Page:  pagination.Page,
+		Limit: pagination.Limit,
+		Sort:  pagination.Sort,
+	}
+	options.CheckSort()
 
-	subdistricts, count, err := h.service.FindByQuery(searchQuery, pagination)
+	subdistricts, count, err := h.service.FindByQuery(r.Context(), searchQuery, options)
 	if err != nil {
 		helper.ResponseError(w, helper.Response{
 			Status:  http.StatusInternalServerError,
@@ -99,12 +119,51 @@ func (h handler) FindByQuery(w http.ResponseWriter, r *http.Request) {
 
 	paginationResponse := helper.PaginationResponse{
 		Total:   count,
-		PerPage: pagination.Limit,
-		Page:    pagination.Page,
+		PerPage: options.Limit,
+		Page:    options.Page,
+	}
+
+	responses := make([]ResponseSearch, 0, len(subdistricts))
+	for _, subdistrict := range subdistricts {
+		responses = append(responses, toResponseSearch(subdistrict))
 	}
 
 	helper.ResponseSuccess(w, helper.Response{
 		Meta:   paginationResponse.ToMeta(),
-		Result: subdistricts,
+		Result: responses,
 	})
+}
+
+func toResponseSearch(subdistrict SubdistrictSearch) ResponseSearch {
+	return ResponseSearch{
+		Code:         subdistrict.Code,
+		Name:         subdistrict.Name,
+		Postcode:     subdistrict.Postcode,
+		DistrictCode: subdistrict.DistrictCode,
+		DistrictName: subdistrict.DistrictName,
+		RegencyCode:  subdistrict.RegencyCode,
+		RegencyName:  fmt.Sprintf("%s %s", getRegencyType(subdistrict.RegencyCode), subdistrict.RegencyName),
+		ProvinceCode: subdistrict.ProvinceCode,
+		ProvinceName: subdistrict.ProvinceName,
+		Address:      addressBuilder(subdistrict),
+	}
+}
+
+func getRegencyType(regencyCode string) string {
+	typeCode, _ := strconv.Atoi(regencyCode[len(regencyCode)-2:])
+	if typeCode < 71 {
+		return "Kab."
+	}
+	return "Kota"
+}
+
+func addressBuilder(subdistrict SubdistrictSearch) string {
+	return fmt.Sprintf("%s, Kec. %s, %s %s, Prov. %s %s",
+		subdistrict.Name,
+		subdistrict.DistrictName,
+		getRegencyType(subdistrict.RegencyCode),
+		subdistrict.RegencyName,
+		subdistrict.ProvinceName,
+		subdistrict.Postcode,
+	)
 }

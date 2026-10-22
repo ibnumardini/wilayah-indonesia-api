@@ -30,7 +30,7 @@ func newHandler(service Service) handler {
 func (h handler) FindByRegencyCode(w http.ResponseWriter, r *http.Request) {
 	regencyCode := chi.URLParam(r, "regencyCode")
 
-	districts, err := h.service.FindByRegencyCode(regencyCode)
+	districts, err := h.service.FindByRegencyCode(r.Context(), regencyCode)
 	if err != nil {
 		helper.ResponseError(w, helper.Response{
 			Status:  http.StatusInternalServerError,
@@ -44,7 +44,13 @@ func (h handler) FindByRegencyCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.ResponseSuccess(w, helper.Response{
-		Result: districts,
-	})
+	responses := make([]Response, 0, len(districts))
+	for _, district := range districts {
+		responses = append(responses, Response{
+			Code: district.Code,
+			Name: district.Name,
+		})
+	}
+
+	helper.ResponseSuccess(w, helper.Response{Result: responses})
 }

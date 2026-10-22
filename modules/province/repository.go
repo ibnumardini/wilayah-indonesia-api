@@ -1,10 +1,14 @@
 package province
 
-import "github.com/jmoiron/sqlx"
+import (
+	"context"
+
+	"github.com/jmoiron/sqlx"
+)
 
 type Repository interface {
-	FindAll() ([]Province, error)
-	FindByCode(code string) (Province, error)
+	FindAll(ctx context.Context) ([]Province, error)
+	FindByCode(ctx context.Context, code string) (*Province, error)
 }
 
 type repository struct {
@@ -17,24 +21,24 @@ func newRepository(db *sqlx.DB) repository {
 	}
 }
 
-func (r repository) FindAll() ([]Province, error) {
+func (r repository) FindAll(ctx context.Context) ([]Province, error) {
 	var provinces []Province
-	if err := r.db.Select(&provinces, "SELECT * FROM provinces"); err != nil {
+	if err := r.db.SelectContext(ctx, &provinces, "SELECT * FROM provinces"); err != nil {
 		return nil, err
 	}
 	return provinces, nil
 }
 
-func (r repository) FindByCode(code string) (Province, error) {
-	var province []Province
+func (r repository) FindByCode(ctx context.Context, code string) (*Province, error) {
+	var provinces []Province
 
-	if err := r.db.Select(&province, "SELECT * FROM provinces WHERE code = ?", code); err != nil {
-		return Province{}, err
+	if err := r.db.SelectContext(ctx, &provinces, "SELECT * FROM provinces WHERE code = ?", code); err != nil {
+		return nil, err
 	}
 
-	if len(province) == 0 {
-		return Province{}, nil
+	if len(provinces) == 0 {
+		return nil, nil
 	}
 
-	return province[0], nil
+	return &provinces[0], nil
 }

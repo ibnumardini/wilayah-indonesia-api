@@ -1,8 +1,10 @@
 package province
 
+import "context"
+
 type Service interface {
-	FindAll() ([]Response, error)
-	FindByCode(code string) (Response, error)
+	FindAll(ctx context.Context) ([]Province, error)
+	FindByCode(ctx context.Context, code string) (*Province, error)
 }
 
 type service struct {
@@ -15,25 +17,20 @@ func newService(repo Repository) service {
 	}
 }
 
-func (s service) FindAll() ([]Response, error) {
-	provinces, err := s.repo.FindAll()
+func (s service) FindAll(ctx context.Context) ([]Province, error) {
+	provinces, err := s.repo.FindAll(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	var responses []Response
-	for _, province := range provinces {
-		responses = append(responses, Response(province))
-	}
-
-	return responses, nil
+	return provinces, nil
 }
 
-func (s service) FindByCode(code string) (Response, error) {
-	province, err := s.repo.FindByCode(code)
+func (s service) FindByCode(ctx context.Context, code string) (*Province, error) {
+	province, err := s.repo.FindByCode(ctx, code)
 	if err != nil {
-		return Response{}, err
+		return nil, err
 	}
 
-	return Response(province), nil
+	return province, nil
 }

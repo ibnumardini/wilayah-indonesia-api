@@ -1,7 +1,9 @@
 package regency
 
+import "context"
+
 type Service interface {
-	FindByProvinceCode(provinceCode string) ([]Response, error)
+	FindByProvinceCode(ctx context.Context, provinceCode string) ([]Regency, error)
 }
 
 type service struct {
@@ -14,20 +16,11 @@ func newService(repo Repository) service {
 	}
 }
 
-func (s service) FindByProvinceCode(provinceCode string) ([]Response, error) {
-	regencies, err := s.repo.FindByProvinceCode(provinceCode)
+func (s service) FindByProvinceCode(ctx context.Context, provinceCode string) ([]Regency, error) {
+	regencies, err := s.repo.FindByProvinceCode(ctx, provinceCode)
 	if err != nil {
 		return nil, err
 	}
 
-	var responses []Response
-	for _, regency := range regencies {
-
-		responses = append(responses, Response{
-			Code: regency.Code,
-			Name: regency.Name,
-		})
-	}
-
-	return responses, nil
+	return regencies, nil
 }

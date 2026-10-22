@@ -1,14 +1,15 @@
 package subdistrict
 
 import (
-	"github.com/ibnumardini/wilayah-indonesia-api/pkg/helper"
+	"context"
+
 	"github.com/jmoiron/sqlx"
 )
 
 type Repository interface {
-	FindByDistrictCode(districtCode string) ([]Subdistrict, error)
-	FindByQuery(searchQuery string, pagination helper.PaginationRequest) ([]SubdistrictSearch, error)
-	CountByQuery(searchQuery string) (int, error)
+	FindByDistrictCode(ctx context.Context, districtCode string) ([]Subdistrict, error)
+	FindByQuery(ctx context.Context, searchQuery string, pagination QueryOptions) ([]SubdistrictSearch, error)
+	CountByQuery(ctx context.Context, searchQuery string) (int, error)
 }
 
 type repository struct {
@@ -21,20 +22,20 @@ func newRepository(db *sqlx.DB) repository {
 	}
 }
 
-func (r repository) FindByDistrictCode(districtCode string) ([]Subdistrict, error) {
+func (r repository) FindByDistrictCode(ctx context.Context, districtCode string) ([]Subdistrict, error) {
 	var subdistricts []Subdistrict
 
 	var query = `SELECT s.code, s.name, s.district_code, p.postcode FROM subdistricts as s
 				JOIN postcodes p ON s.code = p.subdistrict_code WHERE s.district_code = ?`
 
-	if err := r.db.Select(&subdistricts, query, districtCode); err != nil {
+	if err := r.db.SelectContext(ctx, &subdistricts, query, districtCode); err != nil {
 		return nil, err
 	}
 
 	return subdistricts, nil
 }
 
-func (r repository) FindByQuery(searchQuery string, pagination helper.PaginationRequest) ([]SubdistrictSearch, error) {
+func (r repository) FindByQuery(ctx context.Context, searchQuery string, pagination QueryOptions) ([]SubdistrictSearch, error) {
 	var subdistricts []SubdistrictSearch
 
 	var query = `SELECT s.code, s.name, s.district_code, p.postcode, d.name as district_name, r.code as regency_code, r.name as regency_name,
@@ -45,20 +46,20 @@ func (r repository) FindByQuery(searchQuery string, pagination helper.Pagination
 				JOIN provinces pr ON r.province_code = pr.code
 				WHERE LOWER(s.name) LIKE ? OR p.postcode LIKE ? ORDER BY s.name ` + pagination.Sort + ` LIMIT ? OFFSET ?`
 
-	if err := r.db.Select(&subdistricts, query, "%"+searchQuery+"%", "%"+searchQuery+"%", pagination.Limit, pagination.Offset); err != nil {
+	if err := r.db.SelectContext(ctx, &subdistricts, query, "%"+searchQuery+"%", "%"+searchQuery+"%", pagination.Limit, pagination.Offset); err != nil {
 		return nil, err
 	}
 
 	return subdistricts, nil
 }
 
-func (r repository) CountByQuery(searchQuery string) (int, error) {
+func (r repository) CountByQuery(ctx context.Context, searchQuery string) (int, error) {
 	var count int
 
 	var query = `SELECT COUNT(*) FROM subdistricts as s
 				JOIN postcodes p ON s.code = p.subdistrict_code WHERE LOWER(s.name) LIKE ? OR p.postcode LIKE ?`
 
-	if err := r.db.Get(&count, query, "%"+searchQuery+"%", "%"+searchQuery+"%"); err != nil {
+	if err := r.db.GetContext(ctx, &count, query, "%"+searchQuery+"%", "%"+searchQuery+"%"); err != nil {
 		return 0, err
 	}
 

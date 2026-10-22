@@ -1,9 +1,13 @@
 package district
 
-import "github.com/jmoiron/sqlx"
+import (
+	"context"
+
+	"github.com/jmoiron/sqlx"
+)
 
 type Repository interface {
-	FindByRegencyCode(regencyCode string) ([]District, error)
+	FindByRegencyCode(ctx context.Context, regencyCode string) ([]District, error)
 }
 
 type repository struct {
@@ -16,9 +20,9 @@ func newRepository(db *sqlx.DB) repository {
 	}
 }
 
-func (r repository) FindByRegencyCode(regencyCode string) ([]District, error) {
+func (r repository) FindByRegencyCode(ctx context.Context, regencyCode string) ([]District, error) {
 	var districts []District
-	if err := r.db.Select(&districts, "SELECT * FROM districts WHERE regency_code = ?", regencyCode); err != nil {
+	if err := r.db.SelectContext(ctx, &districts, "SELECT * FROM districts WHERE regency_code = ?", regencyCode); err != nil {
 		return nil, err
 	}
 	return districts, nil

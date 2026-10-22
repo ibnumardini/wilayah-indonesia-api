@@ -26,7 +26,7 @@ func newHandler(service Service) handler {
 // @Failure 500 {object} helper.Response
 // @Router /provinces [get]
 func (h handler) FindAll(w http.ResponseWriter, r *http.Request) {
-	provinces, err := h.service.FindAll()
+	provinces, err := h.service.FindAll(r.Context())
 	if err != nil {
 		helper.ResponseError(w, helper.Response{
 			Status:  http.StatusInternalServerError,
@@ -35,9 +35,12 @@ func (h handler) FindAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.ResponseSuccess(w, helper.Response{
-		Result: provinces,
-	})
+	responses := make([]Response, 0, len(provinces))
+	for _, province := range provinces {
+		responses = append(responses, Response(province))
+	}
+
+	helper.ResponseSuccess(w, helper.Response{Result: responses})
 }
 
 // FindByCode godoc
@@ -53,7 +56,7 @@ func (h handler) FindAll(w http.ResponseWriter, r *http.Request) {
 func (h handler) FindByCode(w http.ResponseWriter, r *http.Request) {
 	code := chi.URLParam(r, "code")
 
-	province, err := h.service.FindByCode(code)
+	province, err := h.service.FindByCode(r.Context(), code)
 	if err != nil {
 		helper.ResponseError(w, helper.Response{
 			Status:  http.StatusInternalServerError,
@@ -62,12 +65,10 @@ func (h handler) FindByCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if province == (Response{}) {
+	if province == nil {
 		helper.ResponseError(w, helper.Response{Status: http.StatusNotFound})
 		return
 	}
 
-	helper.ResponseSuccess(w, helper.Response{
-		Result: province,
-	})
+	helper.ResponseSuccess(w, helper.Response{Result: Response(*province)})
 }

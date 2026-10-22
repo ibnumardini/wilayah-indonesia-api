@@ -95,6 +95,34 @@ task swagger
 This updates [docs/docs.go](./docs/docs.go), [docs/swagger.json](./docs/swagger.json),
 and [docs/swagger.yaml](./docs/swagger.yaml).
 
+## Project Structure
+
+The API uses a module-based architecture. Each region module owns its
+repository contract, service logic, HTTP handler, response mapping, and
+router:
+
+```text
+modules/
+├── province/
+├── regency/
+├── district/
+└── subdistrict/
+```
+
+The dependency direction inside a module is:
+
+```text
+HTTP handler -> service -> repository interface
+                                  ^
+                                  |
+                         MySQL repository
+```
+
+Services and repositories receive `context.Context` from the request. HTTP
+response DTOs and query parsing stay in the handler layer, while database
+implementations remain details of the module. Shared infrastructure and
+helpers are kept under [`pkg/`](./pkg/).
+
 ## License
 
 This project is licensed under the terms of the [LICENSE](./LICENSE) file.
