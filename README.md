@@ -21,7 +21,7 @@ This API uses data fetched from BPS (Statistics Indonesia) using [@ibnumardini/w
 
 ## Tech Stack
 
-- Go 1.23.1
+- Go 1.27.3
 - Chi Router
 - MySQL Database
 - Swagger/OpenAPI
@@ -47,7 +47,7 @@ https://wilayah-indonesia-api.mardini.dev
 
 ### Prerequisites
 
-- Go 1.23.1 or higher
+- Go 1.27.3 or higher
 - MySQL Database
 
 ### Installation
@@ -64,6 +64,36 @@ https://wilayah-indonesia-api.mardini.dev
    ```bash
    go mod tidy
    ```
+
+## Local development
+
+The project includes [Task](https://taskfile.dev/) commands and [Air](https://github.com/air-verse/air) configuration for hot reload. The `dev` task runs Air through `go run`, so Air does not need to be installed globally:
+
+```bash
+task dev
+```
+
+The API listens on `http://localhost:8080` by default. Configure the existing database connection with environment variables such as `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`, and `DB_USE_SSL`.
+
+## Docker
+
+Docker Compose runs only the API; it does not create or initialize a database. By default, the container connects to a database on the host through `host.docker.internal:3306`. Compose loads all container environment variables from `.env` using `env_file`.
+
+Copy the template to `.env` and adjust the database values before starting:
+
+```bash
+cp .env.example .env
+
+task docker:up
+```
+
+The included `.env` uses the same defaults and is ignored by Git, so replace its database credentials for your environment.
+
+Source changes are mounted into the development container and automatically rebuilt by Air. To build the production image without running it:
+
+```bash
+task docker:build
+```
 
 ## Documentation
 
