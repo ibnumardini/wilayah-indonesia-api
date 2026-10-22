@@ -1,6 +1,6 @@
 module github.com/ibnumardini/wilayah-indonesia-api
 
-go 1.23.1
+go 1.27.3
 
 require (
 	github.com/go-chi/chi v1.5.5
