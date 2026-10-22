@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/gorilla/schema"
 	"github.com/ibnumardini/wilayah-indonesia-api/pkg/helper"
+	"github.com/ibnumardini/wilayah-indonesia-api/pkg/pagination"
 )
 
 type handler struct {
@@ -90,16 +91,16 @@ func (h handler) FindByQuery(w http.ResponseWriter, r *http.Request) {
 
 	var searchQuery string = strings.ToLower(chi.URLParam(r, "searchQuery"))
 
-	var pagination paginationQuery
-	if err := decoder.Decode(&pagination, r.URL.Query()); err != nil {
+	var paginationParams paginationQuery
+	if err := decoder.Decode(&paginationParams, r.URL.Query()); err != nil {
 		helper.ResponseError(w, helper.Response{Status: http.StatusBadRequest})
 		return
 	}
 
 	options := QueryOptions{
-		Page:  pagination.Page,
-		Limit: pagination.Limit,
-		Sort:  pagination.Sort,
+		Page:  paginationParams.Page,
+		Limit: paginationParams.Limit,
+		Sort:  paginationParams.Sort,
 	}
 	options.CheckSort()
 
@@ -117,7 +118,7 @@ func (h handler) FindByQuery(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	paginationResponse := helper.PaginationResponse{
+	paginationMetadata := pagination.Metadata{
 		Total:   count,
 		PerPage: options.Limit,
 		Page:    options.Page,
@@ -129,7 +130,7 @@ func (h handler) FindByQuery(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helper.ResponseSuccess(w, helper.Response{
-		Meta:   paginationResponse.ToMeta(),
+		Meta:   paginationMetadata.ToMap(),
 		Result: responses,
 	})
 }
