@@ -7,7 +7,9 @@ import (
 )
 
 type serverConfig struct {
-	AppName string
+	AppName     string
+	Port        int
+	SwaggerHost string
 }
 
 type dbConfig struct {
@@ -34,7 +36,9 @@ var C config
 func InitConfig() error {
 	C = config{
 		Server: serverConfig{
-			AppName: env.Get("APP_NAME", "wilayah-indonesia-api"),
+			AppName:     env.Get("APP_NAME", "wilayah-indonesia-api"),
+			Port:        env.GetAsInt("PORT", 8080),
+			SwaggerHost: env.Get("SWAGGER_HOST", ""),
 		},
 		Db: dbConfig{
 			Driver: env.Get("DB_DRIVER", "mysql"),
