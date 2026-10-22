@@ -1,4 +1,4 @@
-package district
+package regency
 
 import (
 	"github.com/go-chi/chi"
@@ -6,11 +6,9 @@ import (
 )
 
 func LoadModule(dbConn *sqlx.DB) *chi.Mux {
-	repo := newMySQLRepository(dbConn)
-	service := newService(&repo)
+	repository := newMySQLRepository(dbConn)
+	service := newService(&repository)
 	handler := newHandler(&service)
 
-	r := newRouter(&handler)
-
-	return r
+	return newRouter(&handler)
 }
