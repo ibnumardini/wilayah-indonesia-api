@@ -26,6 +26,14 @@ tasks:
     cmds:
       - go test ./...
 
+  quality:
+    desc: Run formatting, tests, vet, and build checks
+    cmds:
+      - test -z "$(gofmt -l ./api ./internal ./modules)" || (echo "Go files are not formatted:" && gofmt -l ./api ./internal ./modules && exit 1)
+      - go test ./...
+      - go vet ./...
+      - go build ./...
+
   fmt:
     desc: Format Go source files
     cmds:

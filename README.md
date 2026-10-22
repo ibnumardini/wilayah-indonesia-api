@@ -95,6 +95,22 @@ task swagger
 This updates [docs/docs.go](./docs/docs.go), [docs/swagger.json](./docs/swagger.json),
 and [docs/swagger.yaml](./docs/swagger.yaml).
 
+## Testing and Quality Checks
+
+Run the complete local quality check with:
+
+```bash
+task quality
+```
+
+This verifies formatting, runs tests, performs `go vet`, and builds all
+packages. Run focused tests during development with:
+
+```bash
+go test ./modules/province
+go test ./modules/subdistrict
+```
+
 ## Project Structure
 
 The API uses a module-based architecture. Each region module owns its
@@ -120,8 +136,29 @@ HTTP handler -> service -> repository interface
 
 Services and repositories receive `context.Context` from the request. HTTP
 response DTOs and query parsing stay in the handler layer, while database
-implementations remain details of the module. Shared infrastructure and
-helpers and application infrastructure are kept under [`internal/`](./internal/).
+implementations remain details of the module. Shared helpers and application
+infrastructure are kept under [`internal/`](./internal/).
+
+### Adding a Module
+
+For a new API resource, create a directory under
+[`modules/`](./modules/) with these responsibilities:
+
+```text
+modules/example/
+├── entity.go              # Domain models
+├── repository.go          # Repository interface
+├── mysql_repository.go    # MySQL implementation
+├── service.go             # Application logic
+├── response.go            # HTTP response DTOs
+├── handler.go             # HTTP handlers and mapping
+├── router.go              # Module routes
+└── module.go              # Dependency wiring
+```
+
+Keep the service independent from HTTP and SQL details. Add the module route
+in [`api/index.go`](./api/index.go), add endpoint annotations, regenerate
+Swagger with `task swagger`, and add service or handler tests before merging.
 
 ## License
 
