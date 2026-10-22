@@ -1,6 +1,7 @@
-package api
+package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -11,39 +12,41 @@ import (
 	"github.com/ibnumardini/wilayah-indonesia-api/modules/subdistrict"
 	"github.com/ibnumardini/wilayah-indonesia-api/pkg/config"
 	"github.com/ibnumardini/wilayah-indonesia-api/pkg/db"
+	"github.com/ibnumardini/wilayah-indonesia-api/pkg/env"
 	"github.com/ibnumardini/wilayah-indonesia-api/pkg/helper"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-func init() {
-	config.InitConfig()
-}
+func main() {
+	if err := config.InitConfig(); err != nil {
+		log.Fatalf("initialize config: %v", err)
+	}
 
-func Handler(w http.ResponseWriter, req *http.Request) {
+	dbConn, err := db.OpenDbConnection()
+	if err != nil {
+		log.Fatalf("connect to database: %v", err)
+	}
+	defer dbConn.Close()
+
 	r := chi.NewRouter()
-
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins: []string{"https://*"},
 	}))
 
-	dbConn, err := db.OpenDbConnection()
-	if err != nil {
-		helper.ResponseError(w, helper.Response{
-			Status:  http.StatusInternalServerError,
-			Message: "Database connection failed",
-		})
-		return
-	}
-
 	r.Get("/", welcomeHandler)
 	r.Get("/docs/swagger.json", swaggerHandler)
 	r.Get("/swagger/*", httpSwagger.Handler(httpSwagger.URL("/docs/swagger.json")))
+
 	r.Mount("/provinces", province.LoadModule(dbConn))
 	r.Mount("/regencies", regency.LoadModule(dbConn))
 	r.Mount("/districts", district.LoadModule(dbConn))
 	r.Mount("/subdistricts", subdistrict.LoadModule(dbConn))
 
-	r.ServeHTTP(w, req)
+	addr := ":" + env.Get("PORT", "8080")
+	log.Printf("starting %s on %s", config.C.Server.AppName, addr)
+	if err := http.ListenAndServe(addr, r); err != nil {
+		log.Fatalf("start server: %v", err)
+	}
 }
 
 func welcomeHandler(w http.ResponseWriter, r *http.Request) {
