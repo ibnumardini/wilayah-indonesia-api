@@ -14,6 +14,7 @@ import (
 const (
 	requestsPerMinute = 120
 	burstSize         = 30
+	clientIdleTTL     = 3 * time.Minute
 )
 
 type clientLimiter struct {
@@ -27,6 +28,9 @@ type RateLimiter struct {
 	rate    rate.Limit
 	burst   int
 	proxies []*net.IPNet
+	now     func() time.Time
+
+	lastCleanup time.Time
 }
 
 func NewRateLimiter(requestsPerMinute, burst int, trustedProxyCIDRs ...string) *RateLimiter {
@@ -34,6 +38,7 @@ func NewRateLimiter(requestsPerMinute, burst int, trustedProxyCIDRs ...string) *
 		clients: make(map[string]*clientLimiter),
 		rate:    rate.Limit(float64(requestsPerMinute) / time.Minute.Seconds()),
 		burst:   burst,
+		now:     time.Now,
 	}
 	for _, value := range trustedProxyCIDRs {
 		if _, network, err := net.ParseCIDR(value); err == nil {
@@ -69,10 +74,19 @@ func (rl *RateLimiter) Handler(next http.Handler) http.Handler {
 }
 
 func (rl *RateLimiter) allow(client string) bool {
-	now := time.Now()
+	now := rl.now()
 
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
+
+	if now.Sub(rl.lastCleanup) > clientIdleTTL {
+		for key, entry := range rl.clients {
+			if now.Sub(entry.lastSeen) > clientIdleTTL {
+				delete(rl.clients, key)
+			}
+		}
+		rl.lastCleanup = now
+	}
 
 	entry, exists := rl.clients[client]
 	if !exists {

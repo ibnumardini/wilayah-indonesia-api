@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 )
 
 func noContentHandler() http.Handler {
@@ -115,5 +116,22 @@ func TestRateLimiterSkipsSwaggerRoutes(t *testing.T) {
 		if recorder.Code != http.StatusNoContent {
 			t.Fatalf("Swagger request %d returned status %d, want %d", requestNumber, recorder.Code, http.StatusNoContent)
 		}
+	}
+}
+
+func TestRateLimiterRemovesIdleClients(t *testing.T) {
+	limiter := NewRateLimiter(60, 1)
+	now := time.Now()
+	limiter.now = func() time.Time { return now }
+
+	limiter.allow("192.0.2.1")
+	now = now.Add(clientIdleTTL + time.Second)
+	limiter.allow("192.0.2.2")
+
+	if _, exists := limiter.clients["192.0.2.1"]; exists {
+		t.Fatal("idle client was not removed")
+	}
+	if _, exists := limiter.clients["192.0.2.2"]; !exists {
+		t.Fatal("active client was removed")
 	}
 }
